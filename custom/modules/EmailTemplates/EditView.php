@@ -199,6 +199,7 @@ $xtpl->assign("TEAM", $code);
 function generate_field_defs() {
     global $current_user;
     global $app_list_strings;
+    global $beanList;
 
     $badFields = array(
         'team_id',
@@ -267,7 +268,7 @@ function generate_field_defs() {
         if (!in_array($module, $ignore_modules)) {
             $bean = BeanFactory::getBean($module);
             $loopControl[$module] = array($module => $bean);
-            $prefixes[$module] = strtolower($app_list_strings['moduleListSingular'][$module]).'_';
+            $prefixes[$module] = strtolower($beanList[$module]).'_';
         }
     }
 

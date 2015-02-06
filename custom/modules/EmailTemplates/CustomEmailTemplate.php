@@ -66,11 +66,9 @@ class CustomEmailTemplate extends EmailTemplate
         $prospect = BeanFactory::getBean('Prospects');
 
         // TAWSE
-        $custom_beans = array();
-        foreach ($module_list as $module => $label) {
-            if (!in_array($module, $ignore_modules)) {
-                $custom_beans[$module] = BeanFactory::getBean($module);
-            }
+        $custom_bean = false;
+        if (!in_array($focus->module_dir, $ignore_modules)) {
+            $custom_bean = BeanFactory::getBean($focus->module_name);
         }
         // TAWSE
 
@@ -113,13 +111,13 @@ class CustomEmailTemplate extends EmailTemplate
         // cn: end bug 9277 fix
 
         // TAWSE add our additional modules
-        foreach ($custom_beans as $bean) {
-            foreach($bean->field_defs as $field_def) {
+        if ($custom_bean) {
+            foreach($custom_bean->field_defs as $field_def) {
                 if(($field_def['type'] == 'relate' && empty($field_def['custom_type'])) || $field_def['type'] == 'assigned_user_name') {
                     continue;
                 }
                 $repl_arr = EmailTemplate::add_replacement($repl_arr, $field_def, array(
-                    strtolower($app_list_strings['moduleListSingular'][$bean->module_dir]).'_'         . $field_def['name'] => '',
+                    strtolower($beanList[$custom_bean->module_name]).'_'         . $field_def['name'] => '',
                     //'account_contact_' . $field_def['name'] => '',
                 ));
             }
